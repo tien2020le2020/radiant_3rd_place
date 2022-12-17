@@ -1,4 +1,4 @@
-# Tree-based Crop Classification Models using Image Feature Extraction
+# Crop Classification Models
 
 Third place solution by the team `re-union` in the final round to classify crop types in agricultural fields across Northern India using multispectral observations from Sentinel-2 satellite. 
 
