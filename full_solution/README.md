@@ -460,6 +460,14 @@ code/models/m013-37-optics-small-cluster.joblib
 code/models/m013-37-optics-small-selected.joblib
 ```
 
+These files need to be copied from the solution directory to the
+
+```
+/models/main
+```
+
+directory of the repository so that it can be available in docker.
+
 ### Inference using the full model
 
 To fully reproduce the results as submitted to the competition requires to follow the steps outlined above. To perform inference on a small set of images is not as straightforward, mostly because of the clustering as explained earlier.
