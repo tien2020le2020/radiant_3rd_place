@@ -27,11 +27,10 @@ and other details in the [model documentation](/full_solution/README.md).
 
 3. Build the docker image
 
-
-```bash
-docker build -t skamot/model_radiant:4 -f Dockerfile .
-
-```
+    ```bash
+    cd docker-service
+    docker build -t skamot/model_radiant:4 -f Dockerfile .
+    ```
 
 4. Run Model to generate the predictions
 
