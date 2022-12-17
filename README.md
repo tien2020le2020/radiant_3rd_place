@@ -25,6 +25,27 @@ and other details in the [model documentation](/full_solution/README.md).
 
 2. Prepare your input data in the data folder
 
+The input data should follow the following convention. It should be placed in a directory named
+
+```
+xxx_<tile_id>
+```
+
+where `xxx` is arbitrary and `<tile_id>` represents the id of the tile stored in that directory.
+
+Here is a sample for reference.
+
+```
+data/input/data_001c1
+data/input/data_004fa
+data/input/data_005fe
+data/input/source_001c1
+data/input/source_0023c
+data/input/source_004fa
+```
+
+These directories will contain tiff files for three tiles (id `001c1`, `004fa` and `005fe`). It does not matter where the bands or field ids are, but note that the directory must split on `_` and the last portion must be the tile id. This is in accordance with the competition data.
+
 3. Build the docker image
 
     ```bash
