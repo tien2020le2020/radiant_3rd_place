@@ -1,15 +1,11 @@
-# Weighted Tree-based Crop Classification Models for Imbalanced Datasets
+# Crop Classification Models
 
-Second place solution to classify crop types in agricultural fields across Northern India using multispectral observations from Sentinel-2 satellite. Ensembled weighted tree-based models "LGBM, CATBOOST, XGBOOST" with stratified k-fold cross validation, taking advantage of spatial variability around each field within different distances.
-
-![model_ecaas_agrifieldnet_silver_v1](https://radiantmlhub.blob.core.windows.net/frontend-ml-model-images/model_ecaas_agrifieldnet_silver_v1.png)
-
-MLHub model id: `model_ecaas_agrifieldnet_silver_v1`. Browse on [Radiant MLHub](https://mlhub.earth/model/model_ecaas_agrifieldnet_silver_v1).
+Third place solution by the team `re-union` in the final round to classify crop types in agricultural fields across Northern India using multispectral observations from Sentinel-2 satellite. 
 
 ## ML Model Documentation
 
 Please review the model architecture, license, applicable spatial and temporal extents
-and other details in the [model documentation](/docs/index.md).
+and other details in the [model documentation](/full_solution/README.md).
 
 ## System Requirements
 
@@ -21,90 +17,53 @@ and other details in the [model documentation](/docs/index.md).
 
 |Inferencing|Training|
 |-----------|--------|
-|30 GB RAM | 30 GB RAM|
+|12 GB RAM | 30 GB RAM|
 
 ## Get Started With Inferencing
 
-First clone this Git repository.
+1. Clone this Git repository, you need to use git lfs to get all the big files.
 
-```bash
-git clone https://github.com/radiantearth/model_ecaas_agrifieldnet_silver.git
-cd model_ecaas_agrifieldnet_silver/
-```
+2. Prepare your input data in the data folder
 
-After cloning the model repository, you can use the Docker Compose runtime
-files as described below.
-
-## Pull or Build the Docker Image
-
-Pull pre-built image from Docker Hub (recommended):
-
-```bash
-docker pull docker.io/radiantearth/model_ecaas_agrifieldnet_silver:1
+The input data should follow the following convention. It should be placed in a directory named
 
 ```
-
-Or build image from source:
-
-```bash
-docker build -t radiantearth/model_ecaas_agrifieldnet_silver:1 -f Dockerfile .
+xxx_<tile_id>
 ```
 
-## Run Model to Generate New Inferences
+where `xxx` is arbitrary and `<tile_id>` represents the id of the tile stored in that directory.
 
-1. Prepare your input and output data folders. The `data/` folder in this repository
-    contains some placeholder files to guide you.
+Here is a sample for reference.
 
-    * The `data/` folder must contain:
-        * `input/chips/` Sentinel-2 10m imagery chips  for inferencing:
-            * `images/` Sentinel-2 10m imagery chips for inferencing:
-                * Folder name `chip_id` e.g. `00c23`  Sentinel-2 bands 10m:
-                     * File name: `B01.tif` Type=Byte, ColorInterp=Coastal
-                     * File name: `B02.tif` Type=Byte, ColorInterp=Blue
-                     * File name: `B03.tif` Type=Byte, ColorInterp=Green
-                     * File name: `B04.tif` Type=Byte, ColorInterp=Red
-                     * File name: `B05.tif` Type=Byte, ColorInterp=RedEdge
-                     * File name: `B06.tif` Type=Byte, ColorInterp=RedEdge
-                     * File name: `B07.tif` Type=Byte, ColorInterp=RedEdge
-                     * File name: `B08.tif` Type=Byte, ColorInterp=NIR
-                     * File name: `B8A.tif` Type=Byte, ColorInterp=NIR08
-                     * File name: `B09.tif` Type=Byte, ColorInterp=NIR09
-                     * File name: `B11.tif` Type=Byte, ColorInterp=SWIR16
-                     * File name: `B12.tif` Type=Byte, ColorInterp=SWIR22
-                         * File Format: GeoTIFF, 256x256
-                         * Coordinate Reference System: WGS84 / UTM
-            * `fields/` Corresponding field ids for each pixel in Sentinel-2 images:
-                * Folder name: `chip_id` e.g. `00c23`  Corresponding field ids:
-                     * File name: `field_ids.tif`
-                     * File Format: GeoTIFF, 256x256
-                     * Coordinate Reference System:  WGS84 / UTM
-        * `/input/checkpoint/` the model checkpoint `lgbms, xgbms, cats`.
-            Please note: the model checkpoint is included in this repository.
-    * The `output/` folder is where the model will write inferencing results.
+```
+data/input/data_001c1
+data/input/data_004fa
+data/input/data_005fe
+data/input/source_001c1
+data/input/source_0023c
+data/input/source_004fa
+```
 
-2. Set `INPUT_DATA` and `OUTPUT_DATA` environment variables corresponding with
-    your input and output folders. These commands will vary depending on operating
-    system and command-line shell:
+These directories will contain tiff files for three tiles (id `001c1`, `004fa` and `005fe`). It does not matter where the bands or field ids are, but note that the directory must split on `_` and the last portion must be the tile id. This is in accordance with the competition data.
+
+3. Build the docker image
+
+    ```bash
+    cd docker-service
+    docker build -t skamot/model_radiant:4 -f Dockerfile .
+    ```
+
+4. Run Model to generate the predictions
 
     ```bash
     # change paths to your actual input and output folders
-    export INPUT_DATA="/home/my_user/model_ecaas_agrifieldnet_silver/data/input"
-    export OUTPUT_DATA="/home/my_user/model_ecaas_agrifieldnet_silver/data/output"
-    ```
+    export INPUT_DATA="/opt/radiant/docker-solution/data/input"
+    export OUTPUT_DATA="/opt/radiant/docker-solution/data/output"
+    export MODELS_DIR="/opt/radiant/docker-solution/models"
+    export WORKSPACE_DIR="/opt/radiant/docker-solution/workspace"
 
-3. Run the appropriate Docker Compose command for your system
-
-    ```bash
-    docker-compose up model_ecaas_agrifieldnet_silver_v1
-    
-    #  If the user is not added to docker group
-    sudo -E docker-compose up model_ecaas_agrifieldnet_silver_v1
+    docker-compose up model_radiant_3
     ```
 
 4. Wait for the `docker compose` to finish running, then inspect the
 `OUTPUT_DATA` folder for results.
-
-## Understanding Output Data
-
-Please review the model output format and other technical details in the [model
-documentation](/docs/index.md).
